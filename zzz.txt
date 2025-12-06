@@ -1,0 +1,11 @@
+***Crear un packege.json***
+    npm init --y
+
+***Instalamos el servidor Express***
+    npm i express
+
+        \Instalamos los types de express
+            npm i -D @types/express  
+
+***Instalacion de nodemon y typescript***
+    npm i -D nodemon ts-node typescript
