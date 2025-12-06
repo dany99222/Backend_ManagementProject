@@ -9,3 +9,6 @@
 
 ***Instalacion de nodemon y typescript***
     npm i -D nodemon ts-node typescript
+
+***Instalacion de colores de logs de terminal ***
+    npm i colors
