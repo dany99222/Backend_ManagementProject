@@ -1,10 +1,11 @@
 import { Router } from "express";
 import { ProjectController } from "../controllers/ProjectController";
 
-// Se crea el router 
-const router = Router()
+// Se crea el router
+const router = Router();
 
 //Aqui se manda llamar a un controlador
-router.get('/', ProjectController.getAllProjects)
+router.post("/", ProjectController.createProject);
+router.get("/", ProjectController.getAllProjects);
 
-export default router
+export default router;
