@@ -26,4 +26,21 @@ export class ProjectController {
       console.log(error);
     }
   };
+
+  // Trarnos un proyecto por su ID
+  static getProjectByID = async (req: Request, res: Response) => {
+    //params nos ayuda a obtener datos en la ruta
+    const { id } = req.params;
+
+    try {
+      //Consulta a la bd
+      const project = await Proyect.findById(id);
+      if (!project) {
+        const error = new Error('Proyecto no encontrado')
+        return res.status(404).json({error: error.message});
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 }
