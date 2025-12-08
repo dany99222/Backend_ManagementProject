@@ -14,3 +14,14 @@
     npm i colors
 
 ***Se crea la base de datos en Mongo DB ***
+
+    usuario:
+        root
+    password:
+        HRdlvBcjy2KVG1as
+    url coneccion:
+    mongodb+srv://root:<db_password>@cluster0.geaxi7o.mongodb.net/
+
+***Instalacion de mongobd y dotenv***
+    npm i mongoose dotenv 
+    //conceta y maneja mongo bd desde nodejs y guarda valores de .env
