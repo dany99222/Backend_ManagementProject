@@ -2,8 +2,7 @@ import type { Request, Response } from "express";
 import Proyect from "../models/Proyect";
 
 export class ProjectController {
-
-  // Crear Proyecto 
+  // Crear Proyecto
   static createProject = async (req: Request, res: Response) => {
     // Creamos una instancia al modelo y le pasamos los datos que envia el cliente
     const project = new Proyect(req.body);
@@ -17,7 +16,14 @@ export class ProjectController {
     }
   };
 
+  // Traernos los proyectos
   static getAllProjects = async (req: Request, res: Response) => {
-    res.send("Todos los Proyectos");
+    try {
+      //Nos trae los proyectos de la BD
+      const projects = await Proyect.find({});
+      res.json(projects);
+    } catch (error) {
+      console.log(error);
+    }
   };
 }
