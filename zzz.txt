@@ -25,3 +25,6 @@
 ***Instalacion de mongobd y dotenv***
     npm i mongoose dotenv 
     //conceta y maneja mongo bd desde nodejs y guarda valores de .env
+
+ ***Intalacion de express validator ***
+    npm i express-validator  
