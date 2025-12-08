@@ -12,3 +12,5 @@
 
 ***Instalacion de colores de logs de terminal ***
     npm i colors
+
+***Se crea la base de datos en Mongo DB ***
