@@ -61,7 +61,26 @@ export class ProjectController {
       }
       await project.save(); //Guardamos la actualizacion
       res.send("Proyecto Actualizado"); //Enviamos el mesnaje
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
+  // Trarnos un proyecto por su ID y actualizarlo
+  static deleteProject = async (req: Request, res: Response) => {
+    //params nos ayuda a obtener datos en la ruta
+    const { id } = req.params;
+    try {
+      const project = await Proyect.findById(id);
+
+      //validacion si el proyecto no es encontrado
+      if (!project) {
+        const error = new Error("Proyecto no encontrado");
+        return res.status(404).json({ error: error.message });
+      }
+      
+      await project.deleteOne();
+      res.send("Proyecto Eliminado");
     } catch (error) {
       console.log(error);
     }

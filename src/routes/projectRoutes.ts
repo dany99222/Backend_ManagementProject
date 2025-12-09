@@ -54,4 +54,13 @@ router.put(
   ProjectController.updateProject
 );
 
+// Nos trae el proyecto por su ID
+router.delete(
+  "/:id",
+  //params: valida que el id en la url sea valido para mongo
+  param("id").isMongoId().withMessage("ID no valido"),
+  handleInputErrors,
+  ProjectController.deleteProject
+);
+
 export default router;
