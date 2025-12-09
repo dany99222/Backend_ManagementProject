@@ -6,10 +6,11 @@ import { handleInputErrors } from "../middleware/validation";
 // Se crea el router
 const router = Router();
 
+//crear un proyecto
 router.post(
   "/",
   //validacion en el servidor
-  body("projetName")
+  body("projectName")
     .notEmpty()
     .withMessage("El nombre del proyecto es obligatorio"),
   body("clientName")
@@ -21,6 +22,7 @@ router.post(
   handleInputErrors,
   ProjectController.createProject // si pasa la validacion se manda llamar a un controlador
 );
+
 // Nos trae todos los proyectos
 router.get("/", ProjectController.getAllProjects);
 
@@ -31,6 +33,25 @@ router.get(
   param("id").isMongoId().withMessage("ID no valido"),
   handleInputErrors,
   ProjectController.getProjectByID
+);
+
+// Nos trae el proyecto por su ID
+router.put(
+  "/:id",
+  //params: valida que el id en la url sea valido para mongo
+  param("id").isMongoId().withMessage("ID no valido"),
+  //validacion de datos correctos
+  body("projectName")
+    .notEmpty()
+    .withMessage("El nombre del proyecto es obligatorio"),
+  body("clientName")
+    .notEmpty()
+    .withMessage("El nombre del cliente es obligatorio"),
+  body("description")
+    .notEmpty()
+    .withMessage("La descripcion del proyecto es obligatoria"),
+  handleInputErrors,
+  ProjectController.updateProject
 );
 
 export default router;

@@ -2,26 +2,26 @@ import mongoose, { Schema, Document } from "mongoose";
 
 // type-modelo de typescript
 export type ProyectType = Document & {
-  projetName: string;
+  projectName: string;
   clientName: string;
   description: string;
 };
 
 // type-modelo para mongoose
 const ProyectSchema: Schema = new Schema({
-  proyectname: {
+  projectName: {
     type: String,
-    requiered: true,
+    required: true,
     trim: true,
   },
   clientName: {
     type: String,
-    requiered: true,
+    required: true,
     trim: true,
   },
   description: {
     type: String,
-    requiered: true,
+    required: true,
     trim: true,
   },
 });

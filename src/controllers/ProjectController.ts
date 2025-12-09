@@ -35,10 +35,33 @@ export class ProjectController {
     try {
       //Consulta a la bd
       const project = await Proyect.findById(id);
+
+      //Validacion si lel proyecto no es encontrado
       if (!project) {
-        const error = new Error('Proyecto no encontrado')
-        return res.status(404).json({error: error.message});
+        const error = new Error("Proyecto no encontrado");
+        return res.status(404).json({ error: error.message });
       }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Trarnos un proyecto por su ID y actualizarlo
+  static updateProject = async (req: Request, res: Response) => {
+    //params nos ayuda a obtener datos en la ruta
+    const { id } = req.params;
+    try {
+      //Encuentra un registro por su id y lo actualiza con el segundo parametro
+      const project = await Proyect.findByIdAndUpdate(id, req.body);
+
+      //validacion si el proyecto no es encontrado
+      if (!project) {
+        const error = new Error("Proyecto no encontrado");
+        return res.status(404).json({ error: error.message });
+      }
+      await project.save(); //Guardamos la actualizacion
+      res.send("Proyecto Actualizado"); //Enviamos el mesnaje
+
     } catch (error) {
       console.log(error);
     }
