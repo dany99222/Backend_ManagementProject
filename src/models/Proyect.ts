@@ -1,7 +1,8 @@
+
 import mongoose, { Schema, Document } from "mongoose";
 
 // type-modelo de typescript
-export type ProyectType = Document & {
+export interface InterfaceProyect extends Document{
   projectName: string;
   clientName: string;
   description: string;
@@ -27,5 +28,5 @@ const ProyectSchema: Schema = new Schema({
 });
 
 //Conectas el modelo con mongoose
-const Proyect = mongoose.model<ProyectType>("Proyect", ProyectSchema);
+const Proyect = mongoose.model<InterfaceProyect>("Proyect", ProyectSchema);
 export default Proyect;
