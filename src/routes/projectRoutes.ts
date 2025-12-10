@@ -3,6 +3,7 @@ import { body, param } from "express-validator";
 import { ProjectController } from "../controllers/ProjectController";
 import { handleInputErrors } from "../middleware/validation";
 import { TaskControler } from "../controllers/TaskController";
+import { validateProjectExist } from "../middleware/project";
 
 // Se crea el router
 const router = Router();
@@ -68,6 +69,6 @@ router.delete(
 
 // Routes for task
 router.post("/:projectId/tasks", 
-  
-  TaskControler.createTask);
+  validateProjectExist, // middle para validar si el proyecto existe
+  TaskControler.createTask); //Se creal la task
 export default router;
