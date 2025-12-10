@@ -1,10 +1,22 @@
 import mongoose, { Schema, Document, Types } from "mongoose";
 
+const taskStatus = {
+  PENDING: "pending",
+  ON_HOLD: "onHold",
+  IN_PROGRESS: "inProgress",
+  UNDER_REVIEW: "underReview",
+  COMPLETED: "completed",
+} as const; // Solo se pueden leer no modificar
+
+//con esto solo podemos elegir las opciones de la taskStatus
+export type TaskStatus = (typeof taskStatus)[keyof typeof taskStatus];
+
 // type-modelo de typescript
 export interface InterfaceTask extends Document {
   name: string;
   description: string;
   project: Types.ObjectId; //Una tarea a un proyecto
+  status: TaskStatus;
 }
 
 //Modelo de mongose
@@ -24,6 +36,12 @@ export const TaskSchema: Schema = new Schema(
       //Una tarea a un proyecto
       type: Types.ObjectId,
       ref: "Project",
+    },
+    status: {
+      type: String,
+      //enum se utiliza para un conjunto limitado de valores
+      enum: Object.values(taskStatus),
+      default: taskStatus.PENDING,
     },
   },
   {
