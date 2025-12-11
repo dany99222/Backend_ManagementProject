@@ -89,4 +89,11 @@ router.get(
   //validacion de los campos
   TaskController.getProyectTasks
 );
+
+// Obtener tareas por id 
+router.get(
+  "/:projectId/tasks/:taskId",
+  validateProjectExist,
+  TaskController.getTaskById
+);
 export default router;
