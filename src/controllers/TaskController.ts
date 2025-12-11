@@ -56,8 +56,7 @@ export class TaskController {
         const error = new Error("Tarea no encontrada");
         return res.status(404).json({ error: error.message });
       }
-      console.log(task.project.toString())
-      console.log(req.project._id.toString())
+    
 
       // Validacion para que la tarea le pertenezca a ese proyecto
       if (task.project.toString() !== req.project._id.toString()) {

@@ -90,10 +90,12 @@ router.get(
   TaskController.getProyectTasks
 );
 
-// Obtener tareas por id 
+// Obtener tareas por id y validar que sea de su projecto
 router.get(
   "/:projectId/tasks/:taskId",
+  param("taskId").isMongoId().withMessage("ID no valido"),
   validateProjectExist,
+  handleInputErrors,
   TaskController.getTaskById
 );
 export default router;
