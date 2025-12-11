@@ -34,13 +34,14 @@ export class ProjectController {
 
     try {
       //Consulta a la bd
-      const project = await Proyect.findById(id);
+      const project = await Proyect.findById(id).populate("tasks");
 
       //Validacion si lel proyecto no es encontrado
       if (!project) {
         const error = new Error("Proyecto no encontrado");
         return res.status(404).json({ error: error.message });
       }
+      res.json(project);
     } catch (error) {
       console.log(error);
     }
@@ -78,7 +79,7 @@ export class ProjectController {
         const error = new Error("Proyecto no encontrado");
         return res.status(404).json({ error: error.message });
       }
-      
+
       await project.deleteOne();
       res.send("Proyecto Eliminado");
     } catch (error) {
