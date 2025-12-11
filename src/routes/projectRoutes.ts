@@ -2,7 +2,7 @@ import { Router } from "express";
 import { body, param } from "express-validator";
 import { ProjectController } from "../controllers/ProjectController";
 import { handleInputErrors } from "../middleware/validation";
-import { TaskControler } from "../controllers/TaskController";
+import { TaskController } from "../controllers/TaskController";
 import { validateProjectExist } from "../middleware/project";
 
 // Se crea el router
@@ -68,17 +68,25 @@ router.delete(
 /////////////////////////////////////////////
 
 // Routes for task
+
+// Se crea una tarea en una tarea en un proyecto determinado y se anade el proyecto a la tarea
 router.post(
   "/:projectId/tasks",
-   validateProjectExist, // middle para validar si el proyecto existe
+  validateProjectExist, // middle para validar si el proyecto existe
   //validacion de los campos
-  body("name")
-    .notEmpty()
-    .withMessage("El nombre de la tarea es obligatorio"),
+  body("name").notEmpty().withMessage("El nombre de la tarea es obligatorio"),
   body("description")
     .notEmpty()
     .withMessage("La descripcion es oblogatoria es obligatorio"),
   handleInputErrors, //mostramos los errores
-  TaskControler.createTask //Creamos la tarea
-); //Se creal la task
+  TaskController.createTask //Creamos la tarea
+);
+
+// Obsetener todas las tareas de un proyecto
+router.get(
+  "/:projectId/tasks",
+  validateProjectExist, // middle para validar si el proyecto existe
+  //validacion de los campos
+  TaskController.getProyectTasks
+);
 export default router;
