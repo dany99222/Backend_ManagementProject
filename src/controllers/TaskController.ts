@@ -30,10 +30,13 @@ export class TaskController {
   //Obtener tareas de un determinado proyecto
   static getProyectTasks = async (req: Request, res: Response) => {
     try {
-      const tasks = await Task.find({ project: req.project._id }); // consultamos a la bd las tareas de dicho proyecto
+      // consultamos a la bd las tareas de dicho proyecto
+      //populate: sirve para traernos la informacion del otro documento
+      const tasks = await Task.find({ project: req.project._id }).populate('project'); 
       res.json(tasks); //Nos genera una respuesta de las tareas
     } catch (error) {
       res.status(500).json({ error: "Hubo un error" });
+      console.log(error)
     }
   };
 }

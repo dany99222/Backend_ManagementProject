@@ -35,7 +35,7 @@ export const TaskSchema: Schema = new Schema(
     project: {
       //Una tarea a un proyecto
       type: Types.ObjectId,
-      ref: "Project",
+      ref: "Proyect",
     },
     status: {
       type: String,
