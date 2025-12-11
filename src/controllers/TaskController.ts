@@ -17,10 +17,8 @@ export class TaskControler {
       //le asignamos al projecto las multimples task
       req.project.tasks.push(task._id);
 
-      //Guardamos esa tarea
-      await task.save();
-      //Guardamos esa tarea en su projecto
-      await req.project.save();
+      // Guardamos tareas y proyectos 
+      await Promise.allSettled([task.save(), req.project.save()]);
 
       //Enviamos un response que la tarea fue creada con existo
       res.send("Tarea creada correctamente");
