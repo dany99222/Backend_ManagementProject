@@ -68,7 +68,17 @@ router.delete(
 /////////////////////////////////////////////
 
 // Routes for task
-router.post("/:projectId/tasks", 
-  validateProjectExist, // middle para validar si el proyecto existe
-  TaskControler.createTask); //Se creal la task
+router.post(
+  "/:projectId/tasks",
+   validateProjectExist, // middle para validar si el proyecto existe
+  //validacion de los campos
+  body("name")
+    .notEmpty()
+    .withMessage("El nombre de la tarea es obligatorio"),
+  body("description")
+    .notEmpty()
+    .withMessage("La descripcion es oblogatoria es obligatorio"),
+  handleInputErrors, //mostramos los errores
+  TaskControler.createTask //Creamos la tarea
+); //Se creal la task
 export default router;
