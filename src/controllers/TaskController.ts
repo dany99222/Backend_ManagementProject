@@ -91,10 +91,10 @@ export class TaskController {
         return res.status(400).json({ error: error.message });
       }
 
-      task.name = req.body.name
-      task.description = req.body.description
+      task.name = req.body.name;
+      task.description = req.body.description;
 
-      await task.save()
+      await task.save();
 
       // en caso de que exista repondemos el objeto
       res.send("tarea Actualizada correctamente");
@@ -111,7 +111,7 @@ export class TaskController {
       const { taskId } = req.params;
 
       // Hcaemos la consulta a la bd y lo encontramos por su id
-      const task = await Task.findById(taskId, req.body);
+      const task = await Task.findById(taskId);
 
       // Hacemos una validacion si no existe la tarea
       if (!task) {
@@ -130,6 +130,30 @@ export class TaskController {
 
       // en caso de que exista repondemos el objeto
       res.send("tarea Eliminada correctamente");
+    } catch (error) {
+      res.status(500).json({ error: "Hubo un error" });
+    }
+  };
+
+  // Actualizar el estado de status
+  static updateStatus = async (req: Request, res: Response) => {
+    try {
+      // Se revisa la tarea 
+      const { taskId } = req.params;
+
+      // Hcaemos la consulta a la bd y lo encontramos por su id
+      const task = await Task.findById(taskId);
+
+      // Hacemos una validacion si no existe la tarea
+      if (!task) {
+        const error = new Error("Tarea no encontrada");
+        return res.status(404).json({ error: error.message });
+      }
+
+      //Revisamos el estado
+      const { status } = req.body;
+      task.status = status
+      res.send('Tarea status actualizado')
     } catch (error) {
       res.status(500).json({ error: "Hubo un error" });
     }

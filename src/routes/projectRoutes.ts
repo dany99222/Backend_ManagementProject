@@ -8,7 +8,7 @@ import { validateProjectExist } from "../middleware/project";
 // Se crea el router
 const router = Router();
 
-//crear un proyecto
+// crear un proyecto
 router.post(
   "/",
   //validacion en el servidor
@@ -109,9 +109,9 @@ router.put(
   body("description")
     .notEmpty()
     .withMessage("La descripcion es oblogatoria es obligatorio"),
-    validateProjectExist,
-    handleInputErrors,
-    TaskController.updateTask
+  validateProjectExist,
+  handleInputErrors,
+  TaskController.updateTask
 );
 
 // Eliminar tareas en tareas
@@ -122,5 +122,15 @@ router.delete(
   validateProjectExist,
   handleInputErrors,
   TaskController.deleteTask
+);
+
+// End point para actualizar los esatados de las tareas
+router.post(
+  "/:projectId/tasks/:taskId/status",
+  param("taskId").isMongoId().withMessage("ID no valido"),
+  body("status").notEmpty().withMessage("El estado es obligatorio"),
+  validateProjectExist,
+  handleInputErrors,
+  TaskController.updateStatus
 );
 export default router;
