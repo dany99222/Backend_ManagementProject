@@ -4,6 +4,7 @@ import { ProjectController } from "../controllers/ProjectController";
 import { handleInputErrors } from "../middleware/validation";
 import { TaskController } from "../controllers/TaskController";
 import { validateProjectExist } from "../middleware/project";
+import { validateTaskExist } from "../middleware/task";
 
 // Se crea el router
 const router = Router();
@@ -90,6 +91,8 @@ router.get(
   TaskController.getProyectTasks
 );
 
+// En las rutas donde haya un taskId se ejecutara el siguiente funcion 
+router.param('taskId', validateTaskExist)
 // Obtener tareas por id y validar que sea de su projecto
 router.get(
   "/:projectId/tasks/:taskId",

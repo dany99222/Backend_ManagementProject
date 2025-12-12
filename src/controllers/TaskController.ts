@@ -45,26 +45,14 @@ export class TaskController {
   // Obtener tareas por su ID
   static getTaskById = async (req: Request, res: Response) => {
     try {
-      // extrameos de req.params el taskId
-      const { taskId } = req.params;
-
-      // Hcaemos la consulta a la bd y lo encontramos por su id
-      const task = await Task.findById(taskId);
-
-      // Hacemos una validacion si no existe la tarea
-      if (!task) {
-        const error = new Error("Tarea no encontrada");
-        return res.status(404).json({ error: error.message });
-      }
-
       // Validacion para que la tarea le pertenezca a ese proyecto
-      if (task.project.toString() !== req.project._id.toString()) {
+      if (req.task.project.toString() !== req.project._id.toString()) {
         const error = new Error("Accion no valida");
         return res.status(400).json({ error: error.message });
       }
 
       // en caso de que exista repondemos el objeto
-      res.json(task);
+      res.json(req.task);
     } catch (error) {
       res.status(500).json({ error: "Hubo un error" });
     }
@@ -73,28 +61,16 @@ export class TaskController {
   // Actualizar tareas
   static updateTask = async (req: Request, res: Response) => {
     try {
-      // extrameos de req.params el taskId
-      const { taskId } = req.params;
-
-      // Hcaemos la consulta a la bd y lo encontramos por su id
-      const task = await Task.findById(taskId);
-
-      // Hacemos una validacion si no existe la tarea
-      if (!task) {
-        const error = new Error("Tarea no encontrada");
-        return res.status(404).json({ error: error.message });
-      }
-
       // Validacion para que la tarea le pertenezca a ese proyecto
-      if (task.project.toString() !== req.project._id.toString()) {
+      if (req.task.project.toString() !== req.project._id.toString()) {
         const error = new Error("Accion no valida");
         return res.status(400).json({ error: error.message });
       }
 
-      task.name = req.body.name;
-      task.description = req.body.description;
+      req.task.name = req.body.name;
+      req.task.description = req.body.description;
 
-      await task.save();
+      await req.task.save();
 
       // en caso de que exista repondemos el objeto
       res.send("tarea Actualizada correctamente");
@@ -107,26 +83,14 @@ export class TaskController {
   //Eliminar la referencia de esa tarea en su proyecto
   static deleteTask = async (req: Request, res: Response) => {
     try {
-      // extrameos de req.params el taskId
-      const { taskId } = req.params;
-
-      // Hcaemos la consulta a la bd y lo encontramos por su id
-      const task = await Task.findById(taskId);
-
-      // Hacemos una validacion si no existe la tarea
-      if (!task) {
-        const error = new Error("Tarea no encontrada");
-        return res.status(404).json({ error: error.message });
-      }
-
       //Elimina la tarea del modelo de project en su array de projects
       req.project.tasks = req.project.tasks.filter(
-        (task) => task.toString() !== taskId.toString()
+        (task) => task.toString() !== req.task._id.toString()
       );
 
       // Esto elimina la tarea del modelo de tareas en la bd
       //Guarda el proyecto actualizado
-      await Promise.allSettled([task.deleteOne(), req.project.save()]);
+      await Promise.allSettled([req.task.deleteOne(), req.project.save()]);
 
       // en caso de que exista repondemos el objeto
       res.send("tarea Eliminada correctamente");
@@ -138,22 +102,11 @@ export class TaskController {
   // Actualizar el estado de status
   static updateStatus = async (req: Request, res: Response) => {
     try {
-      // Se revisa la tarea 
-      const { taskId } = req.params;
-
-      // Hcaemos la consulta a la bd y lo encontramos por su id
-      const task = await Task.findById(taskId);
-
-      // Hacemos una validacion si no existe la tarea
-      if (!task) {
-        const error = new Error("Tarea no encontrada");
-        return res.status(404).json({ error: error.message });
-      }
-
       //Revisamos el estado
       const { status } = req.body;
-      task.status = status
-      res.send('Tarea status actualizado')
+      req.task.status = status;
+      await req.task.save();
+      res.send("Tarea status actualizado");
     } catch (error) {
       res.status(500).json({ error: "Hubo un error" });
     }
