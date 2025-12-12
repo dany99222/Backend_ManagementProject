@@ -77,7 +77,7 @@ export class TaskController {
       const { taskId } = req.params;
 
       // Hcaemos la consulta a la bd y lo encontramos por su id
-      const task = await Task.findByIdAndUpdate(taskId, req.body);
+      const task = await Task.findById(taskId);
 
       // Hacemos una validacion si no existe la tarea
       if (!task) {
@@ -91,8 +91,45 @@ export class TaskController {
         return res.status(400).json({ error: error.message });
       }
 
+      task.name = req.body.name
+      task.description = req.body.description
+
+      await task.save()
+
       // en caso de que exista repondemos el objeto
       res.send("tarea Actualizada correctamente");
+    } catch (error) {
+      res.status(500).json({ error: "Hubo un error" });
+    }
+  };
+
+  // Eliminar tareas en tareas
+  //Eliminar la referencia de esa tarea en su proyecto
+  static deleteTask = async (req: Request, res: Response) => {
+    try {
+      // extrameos de req.params el taskId
+      const { taskId } = req.params;
+
+      // Hcaemos la consulta a la bd y lo encontramos por su id
+      const task = await Task.findById(taskId, req.body);
+
+      // Hacemos una validacion si no existe la tarea
+      if (!task) {
+        const error = new Error("Tarea no encontrada");
+        return res.status(404).json({ error: error.message });
+      }
+
+      //Elimina la tarea del modelo de project en su array de projects
+      req.project.tasks = req.project.tasks.filter(
+        (task) => task.toString() !== taskId.toString()
+      );
+
+      // Esto elimina la tarea del modelo de tareas en la bd
+      //Guarda el proyecto actualizado
+      await Promise.allSettled([task.deleteOne(), req.project.save()]);
+
+      // en caso de que exista repondemos el objeto
+      res.send("tarea Eliminada correctamente");
     } catch (error) {
       res.status(500).json({ error: "Hubo un error" });
     }

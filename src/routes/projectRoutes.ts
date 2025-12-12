@@ -113,4 +113,14 @@ router.put(
     handleInputErrors,
     TaskController.updateTask
 );
+
+// Eliminar tareas en tareas
+//Eliminar la referencia de esa tarea en su proyecto
+router.delete(
+  "/:projectId/tasks/:taskId",
+  param("taskId").isMongoId().withMessage("ID no valido"),
+  validateProjectExist,
+  handleInputErrors,
+  TaskController.deleteTask
+);
 export default router;
