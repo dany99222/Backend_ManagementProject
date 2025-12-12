@@ -90,9 +90,8 @@ router.get(
   //validacion de los campos
   TaskController.getProyectTasks
 );
-
-// En las rutas donde haya un taskId se ejecutara el siguiente funcion 
-router.param('taskId', validateTaskExist)
+// En las rutas donde haya un taskId se ejecutara el siguiente funcion
+router.param("taskId", validateTaskExist);
 // Obtener tareas por id y validar que sea de su projecto
 router.get(
   "/:projectId/tasks/:taskId",
