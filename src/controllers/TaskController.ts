@@ -56,7 +56,6 @@ export class TaskController {
         const error = new Error("Tarea no encontrada");
         return res.status(404).json({ error: error.message });
       }
-    
 
       // Validacion para que la tarea le pertenezca a ese proyecto
       if (task.project.toString() !== req.project._id.toString()) {
@@ -66,6 +65,34 @@ export class TaskController {
 
       // en caso de que exista repondemos el objeto
       res.json(task);
+    } catch (error) {
+      res.status(500).json({ error: "Hubo un error" });
+    }
+  };
+
+  // Actualizar tareas
+  static updateTask = async (req: Request, res: Response) => {
+    try {
+      // extrameos de req.params el taskId
+      const { taskId } = req.params;
+
+      // Hcaemos la consulta a la bd y lo encontramos por su id
+      const task = await Task.findByIdAndUpdate(taskId, req.body);
+
+      // Hacemos una validacion si no existe la tarea
+      if (!task) {
+        const error = new Error("Tarea no encontrada");
+        return res.status(404).json({ error: error.message });
+      }
+
+      // Validacion para que la tarea le pertenezca a ese proyecto
+      if (task.project.toString() !== req.project._id.toString()) {
+        const error = new Error("Accion no valida");
+        return res.status(400).json({ error: error.message });
+      }
+
+      // en caso de que exista repondemos el objeto
+      res.send("tarea Actualizada correctamente");
     } catch (error) {
       res.status(500).json({ error: "Hubo un error" });
     }
