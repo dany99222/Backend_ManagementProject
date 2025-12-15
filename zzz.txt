@@ -27,4 +27,9 @@
     //conceta y maneja mongo bd desde nodejs y guarda valores de .env
 
  ***Intalacion de express validator ***
-    npm i express-validator  
+    npm i express-validator 
+
+***Intalamos cors ***
+    npm i cors
+        intalamos los types de cors
+            npm i -D @types/cors
