@@ -33,3 +33,7 @@
     npm i cors
         intalamos los types de cors
             npm i -D @types/cors
+
+Instalamos moragn y types
+    npm i -D @types/morgan
+    npm i moragn
