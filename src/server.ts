@@ -11,7 +11,7 @@ import morgan from "morgan";
 dotenv.config(); // carga las variables del archivo .env
 connectDB(); //conexion hacia la base de datos
 const app = express(); // incia la aplicacion de express
-// app.use(cors(corsConfig)); //Conectamos el frontend con el backend
+app.use(cors(corsConfig)); //Conectamos el frontend con el backend
 
 //Para ver que ruta estamos utilizando
 app.use(morgan("dev"));
@@ -24,3 +24,4 @@ app.use("/api/auth", authRoutes);
 app.use("/api/projects", projectRoutes);
 
 export default app;
+ 
