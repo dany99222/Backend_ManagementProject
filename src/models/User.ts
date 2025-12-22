@@ -8,7 +8,7 @@ export interface InterfaceUser extends Document {
 }
 
 const userSchema: Schema = new Schema({
-  emain: {
+  email: {
     type: String,
     required: true,
     lowercase: true,
