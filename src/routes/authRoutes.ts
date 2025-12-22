@@ -12,8 +12,6 @@ router.post(
     .isLength({ min: 8 })
     .withMessage("El password es muy corto, minimo 8 caracteres"),
   body("password_confirmation").custom((value, { req }) => {
-    console.log(value);
-    console.log(req.body.password);
     if(value !== req.body.password){
         throw new Error('Los Passwords no son Iguales')
     }

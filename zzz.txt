@@ -37,3 +37,9 @@
 Instalamos moragn y types
     npm i -D @types/morgan
     npm i moragn
+
+Instalamos bcrypt
+    Esto nos servira para hashear los password
+        npm i bcrypt
+    E instalamos sus types  
+        npm i -D @types/bcrypt
