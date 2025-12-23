@@ -35,7 +35,7 @@ export class AuthController {
       //Enviamos el email
       AuthEmail.sendConfirmationEmail({
         email: user.email,
-        name: user.email,
+        name: user.name,
         token: token.token,
       });
 
@@ -61,7 +61,7 @@ export class AuthController {
       //Si no existe el suario nos devuelve ste error
       if (!tokenExist) {
         const error = new Error("Token no valido");
-        return res.status(401).json({ error: error.message });
+        return res.status(404).json({ error: error.message });
       }
 
       // Si existe el usuario
@@ -85,14 +85,39 @@ export class AuthController {
   //Login
   static login = async (req: Request, res: Response) => {
     try {
+      //Extraemos el email y el password del body
       const { email, password } = req.body;
+
+      //Consultamos si existe en email
       const user = await User.findOne({ email });
 
-      if(!user){
-        const error = new Error('Usuario no encontrado')
-        return res.status(401).json({error: error.message})
+      //Validar si el usuario existe
+      if (!user) {
+        const error = new Error("Usuario no encontrado");
+        return res.status(404).json({ error: error.message });
+      }
+      //Validar que el confirmed del usuario sea true
+      if (!user.confirmed) {
+        //Genera otro token al usuario
+        const token = new Token();
+        token.user = user._id;
+        token.token = generateToken();
+        //Almacenamos este token en la bd
+        await token.save();
+        //Enviamos el email
+        AuthEmail.sendConfirmationEmail({
+          email: user.email,
+          name: user.name,
+          token: token.token,
+        });
+
+        const error = new Error(
+          "La cuenta no ha sido confirmada, hemos enviado un e-mail de confirmacion"
+        );
+        return res.status(401).json({ error: error.message });
       }
 
+      // Si la cuenta ya es confirmada
     } catch (error) {
       res.status(500).json({ error: "Hubo un error" });
     }
