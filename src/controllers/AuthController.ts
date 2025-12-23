@@ -2,8 +2,11 @@ import type { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import User from "../models/User";
 import { hashPassword } from "../utils/auth";
+import Token from "../models/Token";
+import { generateToken } from "../utils/token";
 
 export class AuthController {
+  //Crear cuenta
   static createAccount = async (req: Request, res: Response) => {
     try {
       //Tomamos el password e email del body
@@ -11,7 +14,7 @@ export class AuthController {
 
       //Preveenir duplicados
       const userExist = await User.findOne({ email });
-      console.log(userExist)
+      console.log(userExist);
       if (userExist) {
         const error = new Error("El usuario ya esta registrado");
         return res.status(409).json({ error: error.message });
@@ -23,8 +26,13 @@ export class AuthController {
       //Hash password
       user.password = await hashPassword(password);
 
-      //Lo guardamos
-      await user.save();
+      //Generamos un nuevo password
+      const token = new Token();
+      token.token = generateToken();
+      token.user = user._id;
+
+      // Guardamos en la base de datos
+      await Promise.allSettled([user.save(), token.save()]);
 
       //Si es creada correctamente resivimos una repuesta del servidor
       res.send("Cuenta creada, verifica el email para confirmarla");
