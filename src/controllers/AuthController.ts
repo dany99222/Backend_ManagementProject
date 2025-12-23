@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import User from "../models/User";
-import { hashPassword } from "../utils/auth";
+import { checkPassword, hashPassword } from "../utils/auth";
 import Token from "../models/Token";
 import { generateToken } from "../utils/token";
 import { AuthEmail } from "../emails/AuthEmail";
@@ -82,7 +82,7 @@ export class AuthController {
     }
   };
 
-  //Login
+  //Login, verificar si el usuario existe y validar qie sea true, en caso contrario mandar token
   static login = async (req: Request, res: Response) => {
     try {
       //Extraemos el email y el password del body
@@ -118,6 +118,15 @@ export class AuthController {
       }
 
       // Si la cuenta ya es confirmada
+      //revisar password
+      const isPasswordCorrect = await checkPassword(password, user.password);
+    if(!isPasswordCorrect){
+      const error = new Error("Password Incorrecto");
+        return res.status(404).json({ error: error.message });
+    }
+
+    res.send('Autenticado...')
+
     } catch (error) {
       res.status(500).json({ error: "Hubo un error" });
     }
