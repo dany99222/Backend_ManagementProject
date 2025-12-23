@@ -4,7 +4,7 @@ import User from "../models/User";
 import { hashPassword } from "../utils/auth";
 import Token from "../models/Token";
 import { generateToken } from "../utils/token";
-import { transporter } from "../config/nodemailer";
+import { AuthEmail } from "../emails/AuthEmail";
 
 export class AuthController {
   //Crear cuenta
@@ -33,13 +33,11 @@ export class AuthController {
       token.user = user._id;
 
       //Enviamos el email
-      await transporter.sendMail({
-        from: 'ProjectMagnament <admin@gamil.com>',
-        to: user.email,
-        subject: 'ProjectMagnament - CONFIRMA TU CUENTA',
-        text: 'ProjectMagnament - CONFIRMA TU CUENTA',
-        html: `<p>Probando email</p>`
-      })
+     AuthEmail.sendConfirmationEmail({
+      email: user.email,
+      name: user.email,
+      token: token.token
+     })
 
       // Guardamos en la base de datos
       await Promise.allSettled([user.save(), token.save()]);
