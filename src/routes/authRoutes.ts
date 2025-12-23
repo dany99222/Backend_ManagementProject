@@ -31,4 +31,15 @@ router.post(
   AuthController.confirmAccount
 );
 
+// Ruta para confirmar cuenta
+router.post(
+  "/login",
+  body("email").notEmpty().withMessage("El emial npo puede ir vacio"),
+  body("password")
+    .notEmpty()
+    .withMessage("El password no puede ir vacio"),
+  handleInputErrors,
+  AuthController.login
+);
+
 export default router;

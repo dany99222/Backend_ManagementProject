@@ -49,6 +49,7 @@ export class AuthController {
     }
   };
 
+  //Confirmar cuenta
   static confirmAccount = async (req: Request, res: Response) => {
     try {
       //Tomamos token del body
@@ -76,6 +77,22 @@ export class AuthController {
       ]);
 
       res.send("Cuenta confirmada correctamente");
+    } catch (error) {
+      res.status(500).json({ error: "Hubo un error" });
+    }
+  };
+
+  //Login
+  static login = async (req: Request, res: Response) => {
+    try {
+      const { email, password } = req.body;
+      const user = await User.findOne({ email });
+
+      if(!user){
+        const error = new Error('Usuario no encontrado')
+        return res.status(401).json({error: error.message})
+      }
+
     } catch (error) {
       res.status(500).json({ error: "Hubo un error" });
     }
