@@ -33,11 +33,11 @@ export class AuthController {
       token.user = user._id;
 
       //Enviamos el email
-     AuthEmail.sendConfirmationEmail({
-      email: user.email,
-      name: user.email,
-      token: token.token
-     })
+      AuthEmail.sendConfirmationEmail({
+        email: user.email,
+        name: user.email,
+        token: token.token,
+      });
 
       // Guardamos en la base de datos
       await Promise.allSettled([user.save(), token.save()]);
@@ -45,7 +45,38 @@ export class AuthController {
       //Si es creada correctamente resivimos una repuesta del servidor
       res.send("Cuenta creada, verifica el email para confirmarla");
     } catch (error) {
-      console.log(error);
+      res.status(500).json({ error: "Hubo un error" });
+    }
+  };
+
+  static confirmAccount = async (req: Request, res: Response) => {
+    try {
+      //Tomamos token del body
+      const { token } = req.body;
+
+      //Hacemos una consulta para ver si existe el token
+      const tokenExist = await Token.findOne({ token });
+
+      //Si no existe el suario nos devuelve ste error
+      if (!tokenExist) {
+        const error = new Error("Token no valido");
+        return res.status(401).json({ error: error.message });
+      }
+
+      // Si existe el usuario
+      //Ahora Buscamos al usuario mediante el id del usuario de dicho token
+      const user = await User.findById(tokenExist.user);
+      //Cambiamos a true la conformacion
+      user.confirmed = true;
+
+      // Hacemos cambios en la BD
+      await Promise.allSettled([
+        user.save(), // Guardamos los cambios de usuario
+        tokenExist.deleteOne(), //Eliminamos el token y sus campos
+      ]);
+
+      res.send("Cuenta confirmada correctamente");
+    } catch (error) {
       res.status(500).json({ error: "Hubo un error" });
     }
   };
