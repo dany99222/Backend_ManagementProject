@@ -43,3 +43,9 @@ Instalamos bcrypt
         npm i bcrypt
     E instalamos sus types  
         npm i -D @types/bcrypt
+
+instalamos  nodemailer
+    Es el que nos va a ayudar a enviar correos de conformacion
+        npm i nodemailer
+    los types de nodemailer 
+        npm i -D @types/nodemailer
