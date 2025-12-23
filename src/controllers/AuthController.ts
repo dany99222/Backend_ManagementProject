@@ -6,9 +6,18 @@ import { hashPassword } from "../utils/auth";
 export class AuthController {
   static createAccount = async (req: Request, res: Response) => {
     try {
-      //Tomamos el password del body
-      const { password } = req.body;
-      //Tomamos el valor de el body
+      //Tomamos el password e email del body
+      const { password, email } = req.body;
+
+      //Preveenir duplicados
+      const userExist = await User.findOne({ email });
+      console.log(userExist)
+      if (userExist) {
+        const error = new Error("El usuario ya esta registrado");
+        return res.status(409).json({ error: error.message });
+      }
+
+      //Creamos un usuario
       const user = new User(req.body);
 
       //Hash password
