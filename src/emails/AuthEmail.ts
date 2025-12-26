@@ -25,7 +25,7 @@ export class AuthEmail {
     </p>
 
     <a 
-      href=""
+      href="${process.env.FRONTEND_URL}/auth/confirm-account"
       style="
         display: inline-block;
         padding: 12px 20px;
