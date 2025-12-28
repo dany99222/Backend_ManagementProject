@@ -131,4 +131,46 @@ export class AuthController {
       res.status(500).json({ error: "Hubo un error" });
     }
   };
+
+   //Solicitar nuevo codigo de conformacion
+  static requestConfirmationCode = async (req: Request, res: Response) => {
+    try {
+      //Tomamos el password e email del body
+      const { password, email } = req.body;
+
+      //usuario existe
+      const user = await User.findOne({ email });
+   
+      if (!user) {
+        const error = new Error("El Usuario no esta registrado");
+        return res.status(404).json({ error: error.message });
+      }
+
+      //Verificamos si el usuarioe sta confirmafo
+        if (user.confirmed) {
+        const error = new Error("El Usuario ya esta confirmado");
+        return res.status(409).json({ error: error.message });
+      }
+
+      //Generamos un nuevo password
+      const token = new Token();
+      token.token = generateToken();
+      token.user = user._id;
+
+      //Enviamos el email
+      AuthEmail.sendConfirmationEmail({
+        email: user.email,
+        name: user.name,
+        token: token.token,
+      });
+
+      // Guardamos en la base de datos
+      await Promise.allSettled([user.save(), token.save()]);
+
+      //Si es creada correctamente resivimos una repuesta del servidor
+      res.send("Se envio un nuevo token a tu email");
+    } catch (error) {
+      res.status(500).json({ error: "Hubo un error" });
+    }
+  };
 }

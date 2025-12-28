@@ -42,4 +42,12 @@ router.post(
   AuthController.login
 );
 
+// Ruta para enviar un nuevo token
+router.post(
+  "/request-code",
+  body("email").notEmpty().withMessage("E-mail no valido"),
+  handleInputErrors,
+  AuthController.requestConfirmationCode
+);
+
 export default router;
