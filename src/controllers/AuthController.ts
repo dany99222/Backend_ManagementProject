@@ -135,7 +135,7 @@ export class AuthController {
   static requestConfirmationCode = async (req: Request, res: Response) => {
     try {
       //Tomamos el password e email del body
-      const {email } = req.body;
+      const { email } = req.body;
 
       //usuario existe
       const user = await User.findOne({ email });
@@ -191,7 +191,7 @@ export class AuthController {
       const token = new Token();
       token.token = generateToken();
       token.user = user._id;
-      await token.save()
+      await token.save();
 
       //Enviamos el email
       AuthEmail.sendPasswordResetToken({
@@ -200,9 +200,29 @@ export class AuthController {
         token: token.token,
       });
 
-
       //Si es creada correctamente resivimos una repuesta del servidor
       res.send("Revisa tu email para istrucciones");
+    } catch (error) {
+      res.status(500).json({ error: "Hubo un error" });
+    }
+  };
+
+  //Validando el token
+  static validateToken = async (req: Request, res: Response) => {
+    try {
+      //Tomamos token del body
+      const { token } = req.body;
+
+      //Hacemos una consulta para ver si existe el token
+      const tokenExist = await Token.findOne({ token });
+
+      //Si no existe el suario nos devuelve ste error
+      if (!tokenExist) {
+        const error = new Error("Token no valido");
+        return res.status(404).json({ error: error.message });
+      }
+
+      res.send("Token Valido, Escribe tu nuevo password");
     } catch (error) {
       res.status(500).json({ error: "Hubo un error" });
     }

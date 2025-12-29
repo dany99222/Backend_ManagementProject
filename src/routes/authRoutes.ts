@@ -56,4 +56,12 @@ router.post(
   AuthController.forgotPassword
 );
 
+// Ruta para enviar un nuevo token
+router.post(
+  "/validate-token",
+  body("token").notEmpty().withMessage("El token no puede ir vacio"),
+  handleInputErrors,
+  AuthController.validateToken
+);
+
 export default router;
