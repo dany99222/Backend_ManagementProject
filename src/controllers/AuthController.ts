@@ -120,34 +120,33 @@ export class AuthController {
       // Si la cuenta ya es confirmada
       //revisar password
       const isPasswordCorrect = await checkPassword(password, user.password);
-    if(!isPasswordCorrect){
-      const error = new Error("Password Incorrecto");
+      if (!isPasswordCorrect) {
+        const error = new Error("Password Incorrecto");
         return res.status(404).json({ error: error.message });
-    }
+      }
 
-    res.send('Autenticado...')
-
+      res.send("Autenticado...");
     } catch (error) {
       res.status(500).json({ error: "Hubo un error" });
     }
   };
 
-   //Solicitar nuevo codigo de conformacion
+  //Solicitar nuevo codigo de conformacion
   static requestConfirmationCode = async (req: Request, res: Response) => {
     try {
       //Tomamos el password e email del body
-      const { password, email } = req.body;
+      const {email } = req.body;
 
       //usuario existe
       const user = await User.findOne({ email });
-   
+
       if (!user) {
         const error = new Error("El Usuario no esta registrado");
         return res.status(404).json({ error: error.message });
       }
 
       //Verificamos si el usuarioe sta confirmafo
-        if (user.confirmed) {
+      if (user.confirmed) {
         const error = new Error("El Usuario ya esta confirmado");
         return res.status(409).json({ error: error.message });
       }
@@ -169,6 +168,41 @@ export class AuthController {
 
       //Si es creada correctamente resivimos una repuesta del servidor
       res.send("Se envio un nuevo token a tu email");
+    } catch (error) {
+      res.status(500).json({ error: "Hubo un error" });
+    }
+  };
+
+  // Restablecer el password
+  static forgotPassword = async (req: Request, res: Response) => {
+    try {
+      //Tomamos el password e email del body
+      const { email } = req.body;
+
+      //usuario existe
+      const user = await User.findOne({ email });
+
+      if (!user) {
+        const error = new Error("El Usuario no esta registrado");
+        return res.status(404).json({ error: error.message });
+      }
+
+      //Generamos un nuevo token
+      const token = new Token();
+      token.token = generateToken();
+      token.user = user._id;
+      await token.save()
+
+      //Enviamos el email
+      AuthEmail.sendPasswordResetToken({
+        email: user.email,
+        name: user.name,
+        token: token.token,
+      });
+
+
+      //Si es creada correctamente resivimos una repuesta del servidor
+      res.send("Revisa tu email para istrucciones");
     } catch (error) {
       res.status(500).json({ error: "Hubo un error" });
     }

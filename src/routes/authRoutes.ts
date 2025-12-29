@@ -35,9 +35,7 @@ router.post(
 router.post(
   "/login",
   body("email").notEmpty().withMessage("El emial npo puede ir vacio"),
-  body("password")
-    .notEmpty()
-    .withMessage("El password no puede ir vacio"),
+  body("password").notEmpty().withMessage("El password no puede ir vacio"),
   handleInputErrors,
   AuthController.login
 );
@@ -48,6 +46,14 @@ router.post(
   body("email").notEmpty().withMessage("E-mail no valido"),
   handleInputErrors,
   AuthController.requestConfirmationCode
+);
+
+// Ruta para enviar un nuevo token
+router.post(
+  "/forgot-password",
+  body("email").notEmpty().withMessage("E-mail no valido"),
+  handleInputErrors,
+  AuthController.forgotPassword
 );
 
 export default router;
