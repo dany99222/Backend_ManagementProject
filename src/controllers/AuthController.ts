@@ -227,4 +227,33 @@ export class AuthController {
       res.status(500).json({ error: "Hubo un error" });
     }
   };
+
+  //Validando el token
+  static updatePasswordWhithToken = async (req: Request, res: Response) => {
+    try {
+      //Tomamos token del body
+      const { token } = req.params;
+
+      //Hacemos una consulta para ver si existe el token
+      const tokenExist = await Token.findOne({ token });
+
+      //Si no existe el suario nos devuelve ste error
+      if (!tokenExist) {
+        const error = new Error("Token no valido");
+        return res.status(404).json({ error: error.message });
+      }
+
+      // Enocntramos el usuario por su id
+      const user = await User.findById(tokenExist.user);
+      //Se hashea el nuevo password
+      user.password = await hashPassword(req.body.password);
+
+      // escribimos los cambios en el usuario y eliminamos el token
+      await Promise.allSettled([user.save(), tokenExist.deleteOne()]);
+
+      res.send("El passwor se modifico correctamente");
+    } catch (error) {
+      res.status(500).json({ error: "Hubo un error" });
+    }
+  };
 }
