@@ -49,3 +49,9 @@ instalamos  nodemailer
         npm i nodemailer
     los types de nodemailer 
         npm i -D @types/nodemailer
+
+Instalacion de la dependencia de JSON Web Token
+    se usa para transmitir información de forma segura entre dos partes, principalmente para autenticación y autorización de usuarios en aplicaciones web y APIs
+        npm i jsonwebtoken  
+    instalamos los types
+        npm i -D @types/jsonwebtoken
