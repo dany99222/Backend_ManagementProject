@@ -208,26 +208,20 @@ export class AuthController {
   };
 
   //Validando el token
-  static validateToken = async (req: Request, res: Response) => {
-    try {
-      //Tomamos token del body
-      const { token } = req.body;
-
-      //Hacemos una consulta para ver si existe el token
-      const tokenExist = await Token.findOne({ token });
-
-      //Si no existe el suario nos devuelve ste error
-      if (!tokenExist) {
-        const error = new Error("Token no valido");
-        return res.status(404).json({ error: error.message });
-      }
-
-      res.send("Token Valido, Escribe tu nuevo password");
-    } catch (error) {
-      res.status(500).json({ error: "Hubo un error" });
+ static validateToken = async (req: Request, res: Response) => {
+        try {
+            const { token } = req.body
+            const tokenExists = await Token.findOne({token})
+            if(!tokenExists) {
+                const error = new Error('Token no válido')
+                res.status(404).json({error: error.message})
+                return
+            }
+            res.send('Token válido, define tu nueva contraseña')
+        } catch (error) {
+            res.status(500).json({error: "Hubo un error"})
+        }
     }
-  };
-
   //Validando el token
   static updatePasswordWhithToken = async (req: Request, res: Response) => {
     try {

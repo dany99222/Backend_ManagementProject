@@ -15,7 +15,7 @@ const tokenSchema: Schema = new Schema({
     type: Types.ObjectId,
     ref: "User", //Se va a guardar la referencia hacia el usuario
   },
-  createdAt: {
+  ExpiresAt: {
     type: Date,
     default: Date.now(),
     expires: "10m",
