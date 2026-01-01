@@ -29,7 +29,9 @@ router.post(
 );
 
 // Nos trae todos los proyectos
-router.get("/", ProjectController.getAllProjects);
+router.get("/", 
+  authenticate,
+  ProjectController.getAllProjects);
 
 // Nos trae el proyecto por su ID
 router.get(

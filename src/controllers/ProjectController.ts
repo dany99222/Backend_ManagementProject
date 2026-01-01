@@ -7,10 +7,9 @@ export class ProjectController {
     // Creamos una instancia al modelo y le pasamos los datos que envia el cliente
     const project = new Proyect(req.body);
 
-    // Asignar un manager 
-    project.manager = req.user._id
-    console.log(req.user)
-
+    // Asignar un manager
+    project.manager = req.user._id;
+    console.log(req.user);
 
     try {
       //Si es correctp se guarda
@@ -25,7 +24,10 @@ export class ProjectController {
   static getAllProjects = async (req: Request, res: Response) => {
     try {
       //Nos trae los proyectos de la BD
-      const projects = await Proyect.find({});
+      const projects = await Proyect.find({
+        //Nos trae solo los proyectos del usuario autenticado
+        $or: [{ manager: { $in: req.user._id } }],
+      });
       res.json(projects);
     } catch (error) {
       console.log(error);
@@ -65,9 +67,9 @@ export class ProjectController {
         const error = new Error("Proyecto no encontrado");
         return res.status(404).json({ error: error.message });
       }
-      project.clientName = req.body.clientName
-      project.projectName = req.body.projectName
-      project.description = req.body.description
+      project.clientName = req.body.clientName;
+      project.projectName = req.body.projectName;
+      project.description = req.body.description;
       await project.save(); //Guardamos la actualizacion
       res.send("Proyecto Actualizado"); //Enviamos el mesnaje
     } catch (error) {
