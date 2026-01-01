@@ -7,7 +7,11 @@ export class ProjectController {
     // Creamos una instancia al modelo y le pasamos los datos que envia el cliente
     const project = new Proyect(req.body);
 
+    // Asignar un manager 
+    project.manager = req.user._id
     console.log(req.user)
+
+
     try {
       //Si es correctp se guarda
       await project.save();
