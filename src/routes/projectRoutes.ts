@@ -10,10 +10,12 @@ import { authenticate } from "../middleware/auth";
 // Se crea el router
 const router = Router();
 
+//Todos los endpoints de este archivo utilizaran autheticate
+router.use(authenticate)
+
 // crear un proyecto
 router.post(
   "/",
-  authenticate,
   //validacion en el servidor
   body("projectName")
     .notEmpty()
@@ -30,7 +32,6 @@ router.post(
 
 // Nos trae todos los proyectos
 router.get("/", 
-  authenticate,
   ProjectController.getAllProjects);
 
 // Nos trae el proyecto por su ID
