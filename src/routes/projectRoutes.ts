@@ -5,6 +5,7 @@ import { handleInputErrors } from "../middleware/validation";
 import { TaskController } from "../controllers/TaskController";
 import { validateProjectExist } from "../middleware/project";
 import { validateTaskExist } from "../middleware/task";
+import { authenticate } from "../middleware/auth";
 
 // Se crea el router
 const router = Router();
@@ -12,6 +13,7 @@ const router = Router();
 // crear un proyecto
 router.post(
   "/",
+  authenticate,
   //validacion en el servidor
   body("projectName")
     .notEmpty()

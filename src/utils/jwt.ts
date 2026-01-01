@@ -9,7 +9,7 @@ export const generateJWT = (payload : UserPayload) => {
 
   // Esto es el JSON Web token
   const token = jwt.sign(payload, process.env.JWT_SECRET, {
-    expiresIn: "6m",
+    expiresIn: "180d",
   });
 
   return token;
