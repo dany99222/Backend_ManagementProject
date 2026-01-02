@@ -49,9 +49,7 @@ export class ProjectController {
         return res.status(404).json({ error: error.message });
       }
 
-      if (
-        project.manager.toString() !== req.user._id.toString()
-      ) {
+      if (project.manager.toString() !== req.user._id.toString()) {
         const error = new Error("Accion no valida");
         return res.status(404).json({ error: error.message });
       }
@@ -74,6 +72,12 @@ export class ProjectController {
         const error = new Error("Proyecto no encontrado");
         return res.status(404).json({ error: error.message });
       }
+
+      if (project.manager.toString() !== req.user._id.toString()) {
+        const error = new Error("Solo el Manager puede actualizar un proyecto");
+        return res.status(404).json({ error: error.message });
+      }
+
       project.clientName = req.body.clientName;
       project.projectName = req.body.projectName;
       project.description = req.body.description;
@@ -94,6 +98,13 @@ export class ProjectController {
       //validacion si el proyecto no es encontrado
       if (!project) {
         const error = new Error("Proyecto no encontrado");
+        return res.status(404).json({ error: error.message });
+      }
+
+       if (
+        project.manager.toString() !== req.user._id.toString()
+      ) {
+        const error = new Error("Solo el Manager puede eliminar un proyecto");
         return res.status(404).json({ error: error.message });
       }
 
