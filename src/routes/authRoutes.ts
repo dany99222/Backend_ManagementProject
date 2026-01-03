@@ -1,3 +1,4 @@
+import { authenticate } from './../middleware/auth';
 import { Router } from "express";
 import { AuthController } from "../controllers/AuthController";
 import { body, param } from "express-validator";
@@ -80,5 +81,10 @@ router.post(
   handleInputErrors,
   AuthController.updatePasswordWhithToken
 );
+
+router.get('/user', 
+  authenticate,
+  AuthController.user
+)
 
 export default router;
