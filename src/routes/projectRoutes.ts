@@ -143,11 +143,19 @@ router.post(
 
 // RUTAS PARA LOS COLABORADORES
 
+// Enocntar  aun suuario 
 router.post(
   "/:projectId/team/find",
   body("email").isEmail().toLowerCase().withMessage("E-Mail no valido"),
   handleInputErrors,
   TeamMemberController.findMemberByEmail
+);
 
+router.post(
+  "/:projectId/team",
+  validateProjectExist,
+  body("id").isMongoId().withMessage("ID no valido"),
+  handleInputErrors,
+  TeamMemberController.addMemberById
 );
 export default router;

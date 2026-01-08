@@ -46,6 +46,7 @@ const ProyectSchema: Schema = new Schema(
       {
         type: Types.ObjectId,
         ref: "User",
+    
       },
     ],
   },
