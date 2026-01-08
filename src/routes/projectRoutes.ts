@@ -6,12 +6,13 @@ import { TaskController } from "../controllers/TaskController";
 import { validateProjectExist } from "../middleware/project";
 import { validateTaskExist } from "../middleware/task";
 import { authenticate } from "../middleware/auth";
+import { TeamMemberController } from "../controllers/TeamController";
 
 // Se crea el router
 const router = Router();
 
 //Todos los endpoints de este archivo utilizaran autheticate
-router.use(authenticate)
+router.use(authenticate);
 
 // crear un proyecto
 router.post(
@@ -31,8 +32,7 @@ router.post(
 );
 
 // Nos trae todos los proyectos
-router.get("/", 
-  ProjectController.getAllProjects);
+router.get("/", ProjectController.getAllProjects);
 
 // Nos trae el proyecto por su ID
 router.get(
@@ -139,5 +139,15 @@ router.post(
   validateProjectExist,
   handleInputErrors,
   TaskController.updateStatus
+);
+
+// RUTAS PARA LOS COLABORADORES
+
+router.post(
+  "/:projectId/team/find",
+  body("email").isEmail().toLowerCase().withMessage("E-Mail no valido"),
+  handleInputErrors,
+  TeamMemberController.findMemberByEmail
+
 );
 export default router;

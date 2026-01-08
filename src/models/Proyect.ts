@@ -9,6 +9,7 @@ export interface InterfaceProyect extends Document {
   description: string;
   tasks: PopulatedDoc<InterfaceTask & Document>[]; // un proyecto mcuhas tareas
 manager: PopulatedDoc<InterfaceUser & Document>
+team: PopulatedDoc<InterfaceUser & Document>[]
 }
 
 // type-modelo para mongoose
@@ -39,7 +40,14 @@ const ProyectSchema: Schema = new Schema(
     manager: {
       type: Types.ObjectId,
         ref: "User",
-    }
+    },
+     team: [
+      //Un proyecto muchas atreas
+      {
+        type: Types.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   {
     //crea dos campos para almacenar fecha de creacion y actualizacion
