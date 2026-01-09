@@ -151,6 +151,11 @@ router.post(
   TeamMemberController.findMemberByEmail
 );
 
+router.get('/:projectId/team',
+   validateProjectExist,
+TeamMemberController.getProjectTeam
+);
+
 router.post(
   "/:projectId/team",
   validateProjectExist,

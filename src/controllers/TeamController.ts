@@ -1,6 +1,7 @@
 import { Response } from "express";
 import { Request } from "express";
 import User from "../models/User";
+import Proyect from "../models/Proyect";
 
 export class TeamMemberController {
   static findMemberByEmail = async (req: Request, res: Response) => {
@@ -13,6 +14,15 @@ export class TeamMemberController {
       return res.status(404).json({ error: error.message });
     }
     res.json(user);
+  };
+
+  static getProjectTeam = async (req: Request, res: Response) => {
+    const project = await Proyect.findById(req.project._id).populate({
+      path: "team",
+      select: "id email name",
+    });
+
+    res.json(project.team);
   };
 
   static addMemberById = async (req: Request, res: Response) => {
