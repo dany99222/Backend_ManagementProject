@@ -23,10 +23,14 @@ export class ProjectController {
   // Traernos los proyectos
   static getAllProjects = async (req: Request, res: Response) => {
     try {
+      const userId = req.user._id;
       //Nos trae los proyectos de la BD
       const projects = await Proyect.find({
         //Nos trae solo los proyectos del usuario autenticado
-        $or: [{ manager: { $in: req.user._id } }],
+        $or: [
+          { manager: userId },
+          { team: { $in: [userId] } },
+        ],
       });
       res.json(projects);
     } catch (error) {
@@ -49,7 +53,7 @@ export class ProjectController {
         return res.status(404).json({ error: error.message });
       }
 
-      if (project.manager.toString() !== req.user._id.toString()) {
+      if (project.manager.toString() !== req.user._id.toString() && !project.team.includes(req.user._id)) {
         const error = new Error("Accion no valida");
         return res.status(404).json({ error: error.message });
       }
@@ -101,17 +105,15 @@ export class ProjectController {
         return res.status(404).json({ error: error.message });
       }
 
-       if (
-        project.manager.toString() !== req.user._id.toString()
-      ) {
+      if (project.manager.toString() !== req.user._id.toString()) {
         const error = new Error("Solo el Manager puede eliminar un proyecto");
         return res.status(404).json({ error: error.message });
       }
 
       await project.deleteOne();
-      res.send("Proyecto Eliminado");
+     return res.status(200).json({ message: "Proyecto eliminado correctamente" });
     } catch (error) {
-      console.log(error);
+       res.status(500).json({ error: "Error interno del servidor" });
     }
   };
 }
