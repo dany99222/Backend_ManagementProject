@@ -4,7 +4,7 @@ import { ProjectController } from "../controllers/ProjectController";
 import { handleInputErrors } from "../middleware/validation";
 import { TaskController } from "../controllers/TaskController";
 import { validateProjectExist } from "../middleware/project";
-import { validateTaskExist } from "../middleware/task";
+import { hasAuthorization, validateTaskExist } from "../middleware/task";
 import { authenticate } from "../middleware/auth";
 import { TeamMemberController } from "../controllers/TeamController";
 
@@ -28,7 +28,7 @@ router.post(
     .notEmpty()
     .withMessage("La descripcion del proyecto es obligatoria"),
   handleInputErrors,
-  ProjectController.createProject // si pasa la validacion se manda llamar a un controlador
+  ProjectController.createProject, // si pasa la validacion se manda llamar a un controlador
 );
 
 // Nos trae todos los proyectos
@@ -40,7 +40,7 @@ router.get(
   //params: valida que el id en la url sea valido para mongo
   param("id").isMongoId().withMessage("ID no valido"),
   handleInputErrors,
-  ProjectController.getProjectByID
+  ProjectController.getProjectByID,
 );
 
 // Nos trae el proyecto por su ID
@@ -59,7 +59,7 @@ router.put(
     .notEmpty()
     .withMessage("La descripcion del proyecto es obligatoria"),
   handleInputErrors,
-  ProjectController.updateProject
+  ProjectController.updateProject,
 );
 
 // Nos trae el proyecto por su ID
@@ -68,7 +68,7 @@ router.delete(
   //params: valida que el id en la url sea valido para mongo
   param("id").isMongoId().withMessage("ID no valido"),
   handleInputErrors,
-  ProjectController.deleteProject
+  ProjectController.deleteProject,
 );
 
 /////////////////////////////////////////////
@@ -80,12 +80,13 @@ router.post(
   "/:projectId/tasks",
   validateProjectExist, // middle para validar si el proyecto existe
   //validacion de los campos
+  hasAuthorization,
   body("name").notEmpty().withMessage("El nombre de la tarea es obligatorio"),
   body("description")
     .notEmpty()
     .withMessage("La descripcion es oblogatoria es obligatorio"),
   handleInputErrors, //mostramos los errores
-  TaskController.createTask //Creamos la tarea
+  TaskController.createTask, //Creamos la tarea
 );
 
 // Obsetener todas las tareas de un proyecto
@@ -93,7 +94,7 @@ router.get(
   "/:projectId/tasks",
   validateProjectExist, // middle para validar si el proyecto existe
   //validacion de los campos
-  TaskController.getProyectTasks
+  TaskController.getProyectTasks,
 );
 // En las rutas donde haya un taskId se ejecutara el siguiente funcion
 router.param("taskId", validateTaskExist);
@@ -103,12 +104,14 @@ router.get(
   param("taskId").isMongoId().withMessage("ID no valido"),
   validateProjectExist,
   handleInputErrors,
-  TaskController.getTaskById
+  TaskController.getTaskById,
 );
 
 // Actualizar tareas
 router.put(
   "/:projectId/tasks/:taskId",
+  validateProjectExist,
+  hasAuthorization,
   //Validar que sea u id valido
   param("taskId").isMongoId().withMessage("ID no valido"),
   //validacion de los campos
@@ -116,19 +119,19 @@ router.put(
   body("description")
     .notEmpty()
     .withMessage("La descripcion es oblogatoria es obligatorio"),
-  validateProjectExist,
   handleInputErrors,
-  TaskController.updateTask
+  TaskController.updateTask,
 );
 
 // Eliminar tareas en tareas
 //Eliminar la referencia de esa tarea en su proyecto
 router.delete(
   "/:projectId/tasks/:taskId",
-  param("taskId").isMongoId().withMessage("ID no valido"),
   validateProjectExist,
+  hasAuthorization,
+  param("taskId").isMongoId().withMessage("ID no valido"),
   handleInputErrors,
-  TaskController.deleteTask
+  TaskController.deleteTask,
 );
 
 // End point para actualizar los esatados de las tareas
@@ -138,22 +141,23 @@ router.post(
   body("status").notEmpty().withMessage("El estado es obligatorio"),
   validateProjectExist,
   handleInputErrors,
-  TaskController.updateStatus
+  TaskController.updateStatus,
 );
 
 // RUTAS PARA LOS COLABORADORES
 
-// Enocntar  aun suuario 
+// Enocntar  aun suuario
 router.post(
   "/:projectId/team/find",
   body("email").isEmail().toLowerCase().withMessage("E-Mail no valido"),
   handleInputErrors,
-  TeamMemberController.findMemberByEmail
+  TeamMemberController.findMemberByEmail,
 );
 
-router.get('/:projectId/team',
-   validateProjectExist,
-TeamMemberController.getProjectTeam
+router.get(
+  "/:projectId/team",
+  validateProjectExist,
+  TeamMemberController.getProjectTeam,
 );
 
 router.post(
@@ -161,14 +165,14 @@ router.post(
   validateProjectExist,
   body("id").isMongoId().withMessage("ID no valido"),
   handleInputErrors,
-  TeamMemberController.addMemberById
+  TeamMemberController.addMemberById,
 );
 
 router.delete(
   "/:projectId/team/:userId",
   validateProjectExist,
-  param('userId').isMongoId().withMessage("ID no valido"),
+  param("userId").isMongoId().withMessage("ID no valido"),
   handleInputErrors,
-  TeamMemberController.removeMemberById
+  TeamMemberController.removeMemberById,
 );
 export default router;

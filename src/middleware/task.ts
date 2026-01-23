@@ -5,7 +5,7 @@ import Task, { InterfaceTask } from "../models/Task";
 declare global {
   namespace Express {
     interface Request {
-        task: InterfaceTask
+      task: InterfaceTask;
     }
   }
 }
@@ -13,7 +13,7 @@ declare global {
 export async function validateTaskExist(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   try {
     //Extraemos este parametro de la url
@@ -28,10 +28,23 @@ export async function validateTaskExist(
       return res.status(404).json({ error: error.message });
     }
 
-    req.task = task
+    req.task = task;
 
     next();
   } catch (error) {
     res.status(500).json({ error: "Hubo un error" });
   }
+}
+
+export async function hasAuthorization(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  //Validamos si el proyecto existe en la bd
+  if (req.user._id.toString() !== req.project.manager.toString()) {
+    const error = new Error("Accion no valida");
+    return res.status(404).json({ error: error.message });
+  }
+  next()
 }
