@@ -17,7 +17,10 @@ export interface InterfaceTask extends Document {
   description: string;
   project: Types.ObjectId; //Una tarea a un proyecto
   status: TaskStatus;
-  completedBy: Types.ObjectId
+  completedBy: {
+    user: Types.ObjectId;
+    status: TaskStatus;
+  }[];
 }
 
 //Modelo de mongose
@@ -44,16 +47,28 @@ export const TaskSchema: Schema = new Schema(
       enum: Object.values(taskStatus),
       default: taskStatus.PENDING,
     },
-    completedBy:{
-      type: Types.ObjectId,
-      ref: 'User',
-      default: null
-    }
+    completedBy: [
+      {
+        user: {
+          type: Types.ObjectId,
+          ref: "User",
+          default: null,
+        },
+        status: {
+          type: String,
+          //enum se utiliza para un conjunto limitado de valores
+          enum: Object.values(taskStatus),
+          default: taskStatus.PENDING,
+        },
+      },
+    ],
+
+    
   },
   {
     //crea dos campos para almacenar fecha de creacion y actualizacion
     timestamps: true,
-  }
+  },
 );
 
 const Task = mongoose.model<InterfaceTask>("Task", TaskSchema);
