@@ -20,6 +20,7 @@ export interface InterfaceTask extends Document {
   completedBy: {
     user: Types.ObjectId;
     status: TaskStatus;
+    
   }[];
 }
 
@@ -63,7 +64,7 @@ export const TaskSchema: Schema = new Schema(
       },
     ],
 
-    
+
   },
   {
     //crea dos campos para almacenar fecha de creacion y actualizacion
