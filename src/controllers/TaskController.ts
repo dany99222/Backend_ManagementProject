@@ -50,9 +50,10 @@ export class TaskController {
         const error = new Error("Accion no valida");
         return res.status(400).json({ error: error.message });
       }
+      const task = await Task.findById(req.task._id).populate({path: 'completedBy', select: 'id name email'})
 
       // en caso de que exista repondemos el objeto
-      res.json(req.task);
+      res.json(task);
     } catch (error) {
       res.status(500).json({ error: "Hubo un error" });
     }
