@@ -33,7 +33,7 @@ export class TaskController {
       // consultamos a la bd las tareas de dicho proyecto
       //populate: sirve para traernos la informacion del otro documento
       const tasks = await Task.find({ project: req.project._id }).populate(
-        "project"
+        "project",
       );
       res.json(tasks); //Nos genera una respuesta de las tareas
     } catch (error) {
@@ -85,7 +85,7 @@ export class TaskController {
     try {
       //Elimina la tarea del modelo de project en su array de projects
       req.project.tasks = req.project.tasks.filter(
-        (task) => task.toString() !== req.task._id.toString()
+        (task) => task.toString() !== req.task._id.toString(),
       );
 
       // Esto elimina la tarea del modelo de tareas en la bd
@@ -104,7 +104,10 @@ export class TaskController {
     try {
       //Revisamos el estado
       const { status } = req.body;
-      req.task.status = status;
+      if (status === "pending") {
+        req.task.status = status;
+      }
+      req.task.completedBy = req.user._id;
       await req.task.save();
       res.send("Tarea status actualizado");
     } catch (error) {

@@ -17,6 +17,7 @@ export interface InterfaceTask extends Document {
   description: string;
   project: Types.ObjectId; //Una tarea a un proyecto
   status: TaskStatus;
+  completedBy: Types.ObjectId
 }
 
 //Modelo de mongose
@@ -43,6 +44,11 @@ export const TaskSchema: Schema = new Schema(
       enum: Object.values(taskStatus),
       default: taskStatus.PENDING,
     },
+    completedBy:{
+      type: Types.ObjectId,
+      ref: 'User',
+      default: null
+    }
   },
   {
     //crea dos campos para almacenar fecha de creacion y actualizacion
