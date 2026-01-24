@@ -7,6 +7,7 @@ import { validateProjectExist } from "../middleware/project";
 import { hasAuthorization, validateTaskExist } from "../middleware/task";
 import { authenticate } from "../middleware/auth";
 import { TeamMemberController } from "../controllers/TeamController";
+import { NoteContrller } from "../controllers/NoteController";
 
 // Se crea el router
 const router = Router();
@@ -175,4 +176,16 @@ router.delete(
   handleInputErrors,
   TeamMemberController.removeMemberById,
 );
+
+
+// RUTAS PARA LAS NOTAS
+
+router.post('/:projectId/tasks/:taskId/notes',
+  validateProjectExist,
+  body('content').notEmpty().withMessage('El contenido de la nota es obligatoria'),
+  handleInputErrors,
+  NoteContrller.createNote
+)
+
+
 export default router;

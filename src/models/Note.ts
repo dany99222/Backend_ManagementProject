@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document, PopulatedDoc, Types } from "mongoose";
 
 // Type script
-export interface IntefaceNote extends Document {
+ export interface IntefaceNote extends Document {
   content: string;
   createdBy: Types.ObjectId;
   task: Types.ObjectId;
@@ -28,3 +28,4 @@ const NoteSchema: Schema = new Schema(
 );
 
 const Note = mongoose.model<IntefaceNote>("note", NoteSchema);
+export default Note;
