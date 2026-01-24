@@ -193,4 +193,12 @@ router.get('/:projectId/tasks/:taskId/notes',
   
 )
 
+router.delete('/:projectId/tasks/:taskId/notes/:noteId',
+  param('noteId').isMongoId().withMessage('ID No Valido'),
+  validateProjectExist,
+  handleInputErrors,
+  NoteContrller.deleteNote
+  
+)
+
 export default router;
