@@ -18,7 +18,7 @@ const NoteSchema: Schema = new Schema(
       ref: "User",
       required: true,
     },
-    Task: {
+    task: {
       type: Types.ObjectId,
       ref: "Task",
       required: true,
@@ -27,5 +27,5 @@ const NoteSchema: Schema = new Schema(
   { timestamps: true },
 );
 
-const Note = mongoose.model<IntefaceNote>("note", NoteSchema);
+const Note = mongoose.model<IntefaceNote>("Note", NoteSchema);
 export default Note;

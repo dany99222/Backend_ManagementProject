@@ -21,7 +21,8 @@ export interface InterfaceTask extends Document {
     user: Types.ObjectId;
     status: TaskStatus;
     
-  }[];
+  }[]
+  notes: Types.ObjectId[];
 }
 
 //Modelo de mongose
@@ -63,7 +64,12 @@ export const TaskSchema: Schema = new Schema(
         },
       },
     ],
-
+notes: [
+  {
+    type: Types.ObjectId,
+    ref: 'Note'
+  }
+]
 
   },
   {
