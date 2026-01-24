@@ -50,7 +50,9 @@ export class TaskController {
         const error = new Error("Accion no valida");
         return res.status(400).json({ error: error.message });
       }
-      const task = await Task.findById(req.task._id).populate({path: 'completedBy.user', select: 'id name email'})
+      const task = await Task.findById(req.task._id)
+      .populate({path: 'completedBy.user', select: 'id name email'})
+      .populate({path: 'notes', populate: {path: 'createdBy', select: 'id name email'}})
 
       // en caso de que exista repondemos el objeto
       res.json(task);

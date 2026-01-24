@@ -21,4 +21,13 @@ export class NoteContrller {
       res.status(500).json({ error: "Hubo un error" });
     }
   };
+
+  static getTaskNotes = async (req: Request, res: Response) => {
+    try {
+      const notes = await Note.find({ task: req.task._id });
+      res.json(notes)
+    } catch (error) {
+      res.status(500).json({ error: "Hubo un error" });
+    }
+  };
 }

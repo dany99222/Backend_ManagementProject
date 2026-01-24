@@ -187,5 +187,10 @@ router.post('/:projectId/tasks/:taskId/notes',
   NoteContrller.createNote
 )
 
+router.get('/:projectId/tasks/:taskId/notes',
+  validateProjectExist,
+  NoteContrller.getTaskNotes
+  
+)
 
 export default router;
