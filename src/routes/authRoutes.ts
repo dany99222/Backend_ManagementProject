@@ -1,4 +1,4 @@
-import { authenticate } from './../middleware/auth';
+import { authenticate } from "./../middleware/auth";
 import { Router } from "express";
 import { AuthController } from "../controllers/AuthController";
 import { body, param } from "express-validator";
@@ -21,7 +21,7 @@ router.post(
   }),
   body("email").isEmail().withMessage("Email no Valido "),
   handleInputErrors,
-  AuthController.createAccount
+  AuthController.createAccount,
 );
 
 // Ruta para confirmar cuenta
@@ -29,7 +29,7 @@ router.post(
   "/confirm-account",
   body("token").notEmpty().withMessage("El token no puede ir vacio"),
   handleInputErrors,
-  AuthController.confirmAccount
+  AuthController.confirmAccount,
 );
 
 // Ruta para confirmar cuenta
@@ -38,7 +38,7 @@ router.post(
   body("email").notEmpty().withMessage("El emial npo puede ir vacio"),
   body("password").notEmpty().withMessage("El password no puede ir vacio"),
   handleInputErrors,
-  AuthController.login
+  AuthController.login,
 );
 
 // Ruta para enviar un nuevo token
@@ -46,7 +46,7 @@ router.post(
   "/request-code",
   body("email").notEmpty().withMessage("E-mail no valido"),
   handleInputErrors,
-  AuthController.requestConfirmationCode
+  AuthController.requestConfirmationCode,
 );
 
 // Ruta para enviar un nuevo token
@@ -54,7 +54,7 @@ router.post(
   "/forgot-password",
   body("email").notEmpty().withMessage("E-mail no valido"),
   handleInputErrors,
-  AuthController.forgotPassword
+  AuthController.forgotPassword,
 );
 
 // Ruta para enviar un nuevo token
@@ -62,13 +62,13 @@ router.post(
   "/validate-token",
   body("token").notEmpty().withMessage("El token no puede ir vacio"),
   handleInputErrors,
-  AuthController.validateToken
+  AuthController.validateToken,
 );
 
 // Ruta para enviar un nuevo token
 router.post(
   "/update-password/:token",
-  param('token').isNumeric().withMessage('Token no valido'),
+  param("token").isNumeric().withMessage("Token no valido"),
   body("password")
     .isLength({ min: 8 })
     .withMessage("El password es muy corto, minimo 8 caracteres"),
@@ -79,12 +79,19 @@ router.post(
     return true;
   }),
   handleInputErrors,
-  AuthController.updatePasswordWhithToken
+  AuthController.updatePasswordWhithToken,
 );
 
-router.get('/user', 
+router.get("/user", authenticate, AuthController.user);
+
+// Profile
+router.put(
+  "/profile",
   authenticate,
-  AuthController.user
-)
+  body("name").notEmpty().withMessage("El nombre no puede ir vacio"),
+  body("email").isEmail().withMessage("Email no Valido "),
+  handleInputErrors,
+  AuthController.updateProfile,
+);
 
 export default router;

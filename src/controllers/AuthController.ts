@@ -113,7 +113,7 @@ export class AuthController {
         });
 
         const error = new Error(
-          "La cuenta no ha sido confirmada, hemos enviado un e-mail de confirmacion"
+          "La cuenta no ha sido confirmada, hemos enviado un e-mail de confirmacion",
         );
         return res.status(401).json({ error: error.message });
       }
@@ -126,7 +126,7 @@ export class AuthController {
         return res.status(404).json({ error: error.message });
       }
 
-      const token = generateJWT({id: user._id})
+      const token = generateJWT({ id: user._id });
 
       res.send(token);
     } catch (error) {
@@ -211,20 +211,20 @@ export class AuthController {
   };
 
   //Validando el token
- static validateToken = async (req: Request, res: Response) => {
-        try {
-            const { token } = req.body
-            const tokenExists = await Token.findOne({token})
-            if(!tokenExists) {
-                const error = new Error('Token no válido')
-                res.status(404).json({error: error.message})
-                return
-            }
-            res.send('Token válido, define tu nueva contraseña')
-        } catch (error) {
-            res.status(500).json({error: "Hubo un error"})
-        }
+  static validateToken = async (req: Request, res: Response) => {
+    try {
+      const { token } = req.body;
+      const tokenExists = await Token.findOne({ token });
+      if (!tokenExists) {
+        const error = new Error("Token no válido");
+        res.status(404).json({ error: error.message });
+        return;
+      }
+      res.send("Token válido, define tu nueva contraseña");
+    } catch (error) {
+      res.status(500).json({ error: "Hubo un error" });
     }
+  };
   //Validando el token
   static updatePasswordWhithToken = async (req: Request, res: Response) => {
     try {
@@ -254,11 +254,28 @@ export class AuthController {
     }
   };
 
-    //Validando el token
+  //Validando el token
   static user = async (req: Request, res: Response) => {
-   return res.json(req.user)
-
+    return res.json(req.user);
   };
 
+  static updateProfile = async (req: Request, res: Response) => {
+    const { name, email } = req.body;
 
+    const userExist = await User.findOne({ email });
+    if (userExist && userExist._id.toString() !== req.user._id.toString()) {
+      const error = new Error("Ese email ya esta registrado");
+      return res.status(409).json({ error: error.message });
+    }
+
+    req.user.name = name;
+    req.user.email = email;
+
+    try {
+      await req.user.save();
+      res.send("Perfil Actualizado Correctamente");
+    } catch (error) {
+      res.status(500).send("Hubo un error");
+    }
+  };
 }

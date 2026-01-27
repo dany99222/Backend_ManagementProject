@@ -54,7 +54,7 @@ export class NoteContrller {
     );
 
     try {
-      await Promise.allSettled([req.task.save(), note.deleteOne()]);
+      await Promise.allSettled([req.task.save(), note.deleteOne( )]);
       res.send("Nota Eliminada");
     } catch (error) {
       res.status(500).json({ error: "Hubo un error" });
