@@ -6,8 +6,10 @@ export const corsConfig: CorsOptions = {
     
     const whitelist = [process.env.FRONTEND_URL];
 
- if (!origin) return callback(null, true);
- 
+if(process.argv[2] === '--api'){
+  whitelist.push(undefined)
+}
+
     if (whitelist.includes(origin)) {
       callback(null, true);
     } else {
